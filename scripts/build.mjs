@@ -1,0 +1,15 @@
+import { cpSync, mkdirSync } from 'node:fs';
+import { spawnSync } from 'node:child_process';
+import { resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
+const root = fileURLToPath(new URL('..',import.meta.url));
+process.chdir(root);
+mkdirSync('dist',{recursive:true});
+const local = resolve('node_modules/typescript/bin/tsc');
+import { existsSync } from 'node:fs';
+const result = existsSync(local) ? spawnSync(process.execPath,[local,'-p','tsconfig.json'],{stdio:'inherit'}) : spawnSync('tsc',['-p','tsconfig.json'],{stdio:'inherit',shell:process.platform==='win32'});
+if(result.status!==0) process.exit(result.status??1);
+cpSync('public','dist',{recursive:true});
+cpSync('src/index.html','dist/index.html');
+cpSync('src/styles.css','dist/styles.css');
+console.log('Build concluído: dist/');

@@ -1,0 +1,8 @@
+{
+  "compilerOptions": {
+    "target": "ES2020", "module": "none", "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "strict": true, "noEmitOnError": true, "outFile": "dist/app.js", "removeComments": false,
+    "forceConsistentCasingInFileNames": true
+  },
+  "files": ["src/pages.ts", "src/app.ts"]
+}
