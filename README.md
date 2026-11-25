@@ -1,92 +1,136 @@
-# Brasília 120 — Fotolivro digital (v2.0)
+# Brasília 120 - Digital Photobook | v2.0
 
-Uma edição digital do projeto fotográfico autoral de Lucas Ferreira, Brasília, abril de 2022. Fotografia analógica noturna em médio formato, com 42 fotografias, cinco películas e três óticas: Monumental, Flâneur e Sociopolítica.
+*Uma cidade revelada pela noite.*
 
-## Abrir imediatamente
+## Sobre o projeto
 
-Extraia **todo o ZIP** e abra `dist/index.html` no navegador. O site já está compilado, usa apenas recursos locais e não exige Node.js para leitura. Se preferir, utilize o servidor local abaixo.
+O **Brasília 120** é um projeto autoral de fotografia analógica noturna em médio formato (6×6), que investiga as diferentes dimensões estéticas, culturais e sociopolíticas de Brasília e do Distrito Federal.
 
-## Desenvolver no VS Code (Windows, macOS ou Linux)
+Realizado com uma câmera TLR alemã Zeiss Ikoflex de 1945, utilizando películas de formato 120 e técnicas de longa exposição, o projeto estabelece um diálogo entre luz, sombra, tempo, memória e cotidiano urbano.
 
-Pré-requisito: Node.js 18+ (recomenda-se 22+). Abra a pasta `brasilia-120` no VS Code e, no terminal Git Bash/PowerShell, execute:
+Originalmente publicado em abril de 2022, o fotolivro apresenta três óticas que se complementam e se entrelaçam:
 
-```bash
-npm install
-npm run dev
-```
+- **I - Monumental:** a dimensão estética e arquitetônica da capital federal, seus monumentos, formas e expressões.
+- **II - Flâneur:** um percurso contemplativo e investigativo pelas cenas, histórias e experiências do cotidiano urbano.
+- **III - Sociopolítica:** as contradições, desigualdades, manifestações e narrativas sociopolíticas que permeiam a realidade brasiliense.
 
-Abra http://localhost:5173. Alterações nos arquivos de `src/` recompilam automaticamente; atualize o navegador para visualizá-las. Para encerrar o servidor, pressione `Ctrl+C`.
+## Experiência digital
 
-```bash
-npm run check    # Validação de tipos
-npm run build    # Gera o site estático em dist/
-npm run preview  # Visualiza o build em http://localhost:4173
-```
+A versão digital do Brasília 120 propõe uma imersão na fotografia analógica noturna, recriando a experiência de folhear um fotolivro físico em um ambiente virtual, interativo e responsivo.
 
-## Recursos
+Desenvolvida com TypeScript, HTML5 e CSS3, a plataforma apresenta uma interface minimalista, com fundo preto absoluto, transições tridimensionais e recursos de navegação que valorizam a composição fotográfica e preservam a identidade editorial da publicação original.
 
-- Página quadrada 1:1 em todos os tamanhos de tela; layout editorial preto e responsivo.
-- Passagem tridimensional de uma página por vez, com rotação em torno da lombada virtual e sombra dinâmica. Durante um swipe horizontal, a folha acompanha o gesto; abaixo do limiar de movimento, ela retorna à posição inicial.
-- Botões Anterior/Próxima; setas esquerda/direita; Home/End quando o leitor está focado; índice com 56 miniaturas; atalhos de capítulos; barra de progresso navegável.
-- Deslize para a esquerda para avançar, para a direita para retornar. Também funciona arrastando com o mouse. A rolagem vertical continua disponível.
-- Tela cheia nativa via Fullscreen API quando disponível; fallback imersivo CSS em navegadores que não permitem tela cheia (por exemplo, Safari no iPhone). Capítulos no topo e controles disponíveis durante toda a leitura; em paisagem de baixa altura, os controles ficam na lateral para maximizar o quadrado. Saia pelo botão ou Esc. Ampliação, texto e PDF original continuam acessíveis.
-- Páginas PNG de 2400 × 2400 px com codificação sem perdas, sem `srcset` de baixa resolução no leitor; miniaturas PNG de 320 px somente no índice. Pré-carregamento limitado às duas páginas vizinhas e miniaturas com lazy loading. Sem bibliotecas ou CDN em tempo de execução. Respeita `prefers-reduced-motion`.
+O ambiente digital convida o visitante a desacelerar o olhar e experimentar Brasília através das particularidades da fotografia analógica em médio formato.
 
-## Estrutura
+## Funcionalidades
 
-```text
-brasilia-120/
-├── src/
-│   ├── index.html      # Interface e apresentação do projeto
-│   ├── styles.css      # Layout responsivo, tema e efeitos visuais
-│   ├── app.ts          # Navegação, gestos, animação e diálogos
-│   └── pages.ts        # Metadados e texto extraído das 56 páginas
-├── public/
-│   ├── pages/          # 56 PNGs de leitura + 56 miniaturas PNG
-│   ├── brasilia-120.pdf # PDF original sem alterações
-│   └── favicon.svg
-├── scripts/            # Build, servidor de desenvolvimento e conversão PDF
-├── dist/               # Site compilado, pronto para hospedagem estática
-├── package.json
-├── tsconfig.json
-└── vercel.json
-```
+- **Fotolivro interativo:** visualização das 56 páginas da publicação original, preservando a proporção quadrada 1:1.
+- **3D Page Flip:** simulação tridimensional do movimento de folhear um livro físico, com transições suaves.
+- **Swipe Navigation:** navegação por gestos horizontais em dispositivos touchscreen.
+- **Drag Navigation:** interação por meio do arraste das páginas com o mouse.
+- **Keyboard Navigation:** navegação utilizando as setas direcionais do teclado.
+- **Fullscreen Mode:** modo imersivo com aproveitamento máximo da área disponível da tela.
+- **High Resolution:** renderização das páginas em alta resolução, sem perdas adicionais de compressão.
+- **Chapter Navigation:** acesso direto às três óticas do fotolivro.
+- **Interactive Thumbnails:** índice visual interativo com miniaturas de todas as páginas.
+- **Zoom:** ampliação das páginas para contemplação dos detalhes fotográficos e leitura dos elementos textuais.
+- **Progress Bar:** barra de progresso interativa e indicador de paginação.
+- **Responsive Design:** adaptação dinâmica para desktops, notebooks, tablets e smartphones.
+- **Adaptive Layout:** suporte às orientações vertical e horizontal da tela.
+- **Smart Preloading:** pré-carregamento das páginas adjacentes para maior fluidez durante a navegação.
+- **Lazy Loading:** carregamento sob demanda, reduzindo o consumo desnecessário de recursos.
+- **Original PDF:** acesso à versão original do fotolivro.
 
-## Publicação
+## Versão 2.0 - Fullscreen & High Resolution
 
-- Vercel: importe o repositório no painel, selecione **Other** como framework, raiz do projeto `.`, comando `npm run build` e diretório de saída `dist`. O arquivo `vercel.json` já define build e saída.
-- GitHub Pages: publique os conteúdos de `dist/` por um workflow de deployment ou branch dedicada; não publique a pasta do projeto inteira como se fosse a raiz do site. As URLs são relativas, compatíveis com subdiretórios.
-- Netlify: comando `npm run build`, pasta de publicação `dist`.
+A versão 2.0 foi desenvolvida com foco na ampliação da experiência imersiva, na fidelidade visual das fotografias e no aprimoramento da interação entre o usuário e a publicação digital.
 
-Nenhuma conta ou publicação foi criada pelo projeto. Certifique-se de possuir os direitos necessários para distribuir a edição digital e o PDF.
+### Fullscreen Immersive Experience
 
-## Editar ou substituir o PDF
+- Implementação da Fullscreen API nativa dos navegadores.
+- Dimensionamento dinâmico do fotolivro para ocupar a maior área disponível da tela.
+- Preservação da proporção original 1:1, sem cortes ou distorções.
+- Acesso permanente aos capítulos durante o modo imersivo.
+- Preservação dos controles de navegação, paginação e ampliação.
+- Manutenção da página atual ao entrar ou sair do modo fullscreen.
+- Ocultação dos elementos externos à experiência de leitura.
+- Modo imersivo alternativo para navegadores com restrições de acesso à Fullscreen API.
 
-Edite o texto em `src/index.html`, o visual em `src/styles.css` e a lógica em `src/app.ts`. O PDF enviado tem 56 páginas quadradas; a edição web preserva sua ordem e diagramação em imagens rasterizadas, em PNG sem perdas, com 2400 × 2400 px por página. A resolução de renderização não acrescenta detalhes às fotografias rasterizadas originais (que já têm resolução limitada no PDF). Para regenerar os arquivos a partir do mesmo PDF:
+### High Resolution & Lossless Rendering
 
-```bash
-python -m pip install pymupdf pillow
-python scripts/prepare_pages.py
-npm run build
-```
+As 56 páginas foram renderizadas diretamente a partir do PDF original, utilizando o formato PNG Lossless, com resolução de 2400 × 2400 pixels por página.
 
-Para um PDF diferente, revise também os títulos de seções, as páginas de capítulos, a capa inicial e os metadados em HTML e TypeScript. A transcrição é extraída automaticamente, podendo conservar a ordem de leitura interna do PDF em páginas com colunas.
+Essa implementação busca preservar as características estéticas da fotografia analógica, incluindo a granulação das películas, as nuances tonais, as texturas, os contrastes e os detalhes presentes nas imagens originais, sem introduzir perdas adicionais de compressão.
 
-## Atualizar no GitHub Pages
+A qualidade efetiva permanece condicionada à resolução das fotografias incorporadas ao PDF original.
 
-Use uma cópia local do repositório existente, mantendo a pasta `.git`. Substitua `src/`, `public/` e `scripts/` pelas versões novas; remova os antigos arquivos `.webp` em `public/pages/` e `dist/pages/`. Preserve alterações próprias nos arquivos de configuração ao mesclar o pacote.
+### Comparativo entre versões
 
-```bash
-npm install
-npm run build
-git add -A
-git commit -m "v2.0 - Fullscreen e PNG sem perdas"
-git push origin main
-npx gh-pages -d dist
-```
+| Recurso | v1.0 | v2.0 |
+|---|---|---|
+| Total de páginas | 56 | 56 |
+| Proporção | 1:1 | 1:1 |
+| Resolução máxima | 1600 × 1600 px | 2400 × 2400 px |
+| Megapixels por página | 2,56 MP | 5,76 MP |
+| Formato de imagem | WebP | PNG Lossless |
+| Compressão sem perdas | Não | Sim |
+| Fullscreen nativo | Não | Sim |
+| Modo imersivo | Sim | Aprimorado |
+| Capítulos em fullscreen | Não | Sim |
+| Transições tridimensionais | Sim | Sim |
+| Navegação por swipe | Sim | Sim |
+| Dimensionamento dinâmico | Parcial | Aprimorado |
+| Responsividade | Sim | Aprimorada |
+| PDF original preservado | Sim | Sim |
 
-Se necessário, instale `gh-pages` com `npm install -D gh-pages` antes de publicar. Em Settings → Pages, mantenha `gh-pages` e `/(root)` como origem.
+A versão 2.0 representa um aumento de **125% na quantidade de pixels renderizados por página**, proporcionando maior definição para a visualização em telas de alta densidade e durante a ampliação.
 
-## Verificação
+## Tecnologias e recursos
 
-TypeScript strict compilado sem erros. As 56 páginas foram rasterizadas diretamente do PDF de origem, e seis amostras foram comparadas pixel a pixel com o render original. Os controles, capítulo, navegação, arraste, índice, ampliação e dimensões do livro em modo imersivo foram conferidos no Chromium em 1440×900, 390×844, 320×568 e 844×390. O ambiente impede navegação HTTP/file no Chromium; os testes de interface foram realizados com os recursos do projeto inseridos em memória. O fallback sem Fullscreen API e o swipe por toque emulado foram conferidos em 390×844 e 844×390. Não foram testados dispositivos físicos ou Safari. A disponibilidade de fullscreen nativo depende do navegador; o fallback CSS não esconde necessariamente a barra de endereço do sistema.
+- TypeScript
+- HTML5
+- CSS3
+- Node.js
+- Fullscreen API
+- Pointer Events API
+- CSS 3D Transforms
+- CSS Grid & Flexbox
+- RequestAnimationFrame
+- Responsive Web Design
+- PNG Lossless Rendering
+- Smart Preloading & Lazy Loading
+
+## Concepção artística e tecnológica
+
+O Brasília 120 Digital Photobook estabelece uma conexão entre a materialidade da fotografia analógica e as possibilidades interativas das tecnologias digitais contemporâneas.
+
+A proposta não se limita à digitalização de uma publicação impressa, mas busca construir uma experiência de contemplação na qual a tecnologia atua como mediadora entre a obra fotográfica e o observador, preservando a narrativa, a sequência editorial e a singularidade estética do projeto original.
+
+## Autoria
+
+**Fotografia, concepção artística e projeto autoral:** Lucas Ferreira.
+
+**Design, desenvolvimento e implementação da plataforma digital:** Lucas Ferreira (UnB/PPGEduC), 2026.
+
+- Universidade de Brasília (UnB).
+- Programa de Pós-Graduação em Educação em Ciências (PPGEduC).
+- Publicação original: Brasília, Distrito Federal, abril de 2022.
+- Plataforma digital: 2026.
+- Versão atual: 2.0 - Fullscreen & High Resolution.
+- Instagram: [@picture.insight](https://www.instagram.com/picture.insight/)
+
+## Copyright
+
+© 2022–2026 Lucas Ferreira - Brasília 120. Todos os direitos reservados.
+
+© 2026 Lucas Ferreira (UnB/PPGEduC) - Brasília 120 Digital Photobook.
+
+As fotografias, os textos, a composição editorial, a identidade visual e o código-fonte da plataforma digital são protegidos pela legislação de direitos autorais. A disponibilização pública deste repositório não implica autorização para reprodução, modificação, redistribuição ou exploração comercial de seu conteúdo.
+
+Qualquer utilização, integral ou parcial, está condicionada à autorização prévia e expressa do autor.
+
+---
+
+*Analog photography. Medium format. Long exposures. Urban narratives.*
+
+**Brasília 120 - A city revealed through the night.**
