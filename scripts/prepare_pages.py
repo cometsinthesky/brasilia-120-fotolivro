@@ -8,10 +8,10 @@ output = root/'public/pages'; output.mkdir(parents=True, exist_ok=True)
 doc = fitz.open(source)
 meta=[]
 for i, page in enumerate(doc,1):
-    pix = page.get_pixmap(matrix=fitz.Matrix(1600/page.rect.width,1600/page.rect.height), alpha=False)
+    pix = page.get_pixmap(matrix=fitz.Matrix(2400/page.rect.width,2400/page.rect.height), alpha=False)
     im = Image.frombytes('RGB',(pix.width,pix.height),pix.samples)
-    im.save(output/f'{i:02d}-large.webp', 'WEBP', quality=90,method=3)
-    im.resize((800,800),Image.Resampling.LANCZOS).save(output/f'{i:02d}-small.webp','WEBP',quality=83,method=3)
+    im.save(output/f'{i:02d}-large.png', 'PNG', compress_level=3)
+    im.resize((320,320),Image.Resampling.LANCZOS).save(output/f'{i:02d}-small.png','PNG',compress_level=3)
     txt = page.get_text().strip()
     lines = [x.strip() for x in txt.splitlines() if x.strip() and not re.fullmatch(r'\d+',x.strip())]
     names={1:'Capa',2:'Folha de contatos',3:'Apresentação',4:'Processo fotográfico',5:'Epígrafe',6:'Abertura',7:'I | Monumental',19:'II | Flâneur',34:'Transição',35:'III | Sociopolítica',54:'Ficha técnica',55:'Apresentação final',56:'Contracapa'}

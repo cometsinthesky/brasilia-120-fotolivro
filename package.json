@@ -1,6 +1,6 @@
 {
   "name": "brasilia-120-fotolivro",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "private": true,
   "description": "Fotolivro digital responsivo em TypeScript e HTML5",
   "scripts": {

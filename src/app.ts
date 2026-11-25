@@ -23,8 +23,7 @@ const TOTAL = PAGES.length;
 const pad = (n: number) => String(n).padStart(2, '0');
 const clamp = (n: number, a: number, b: number) => Math.min(b, Math.max(a, n));
 const valid = (n: number) => n >= 1 && n <= TOTAL;
-const asset = (n: number, size: 'small' | 'large') => `pages/${pad(n)}-${size}.webp`;
-const sizes = '(max-width: 820px) 94vw, 690px';
+const asset = (n: number, size: 'small' | 'large') => `pages/${pad(n)}-${size}.png`;
 const chapterName = (n: number) => n === 1 ? 'Capa' : n < 7 ? 'Abertura' : n < 19 ? 'I — Monumental' : n < 35 ? 'II — Flâneur' : n < 54 ? 'III — Sociopolítica' : n === TOTAL ? 'Contracapa' : 'Encerramento';
 const pageAlt = (n: number) => `Página ${n} de ${TOTAL}: ${PAGES[n-1].title}`;
 let current = 1;
@@ -38,22 +37,20 @@ function loadPage(n: number): Promise<HTMLImageElement> {
   if (cached) return cached;
   const img = new Image();
   img.id = 'page'; img.className = 'page-image'; img.alt = pageAlt(n);
-  img.width = 1600; img.height = 1600; img.draggable = false;
+  img.width = 2400; img.height = 2400; img.draggable = false;
   img.decoding = 'async';
-  img.sizes = sizes;
   const promise = new Promise<HTMLImageElement>((resolve, reject) => {
     img.onload = () => { img.decode().catch(() => {}).then(() => resolve(img)); };
     img.onerror = () => {cache.delete(n); reject(new Error(`Página ${n} indisponível`));};
-    img.srcset = `${asset(n,'small')} 800w, ${asset(n,'large')} 1600w`;
-    img.src = asset(n,'small');
+    img.src = asset(n,'large');
   });
   cache.set(n, promise);
   return promise;
 }
 function prefetch() {
   // Somente páginas próximas; mantém o consumo de memória previsível.
-  for (const n of cache.keys()) if (Math.abs(n-current)>3) cache.delete(n);
-  for (const n of [current+1,current-1,current+2]) if(valid(n)) void loadPage(n).catch(()=>{});
+  for (const n of cache.keys()) if (Math.abs(n-current)>1) cache.delete(n);
+  for (const n of [current+1,current-1]) if(valid(n)) void loadPage(n).catch(()=>{});
 }
 function sync(announce = false) {
   el('current').textContent = pad(current);
@@ -124,7 +121,7 @@ async function revert() {
   if(!preview) return;
   busy=true;sync();await animateTo(0,190);closePreview(false);busy=false;sync();
 }
-function showReader(){reader.scrollIntoView({behavior:reduced.matches?'instant':'smooth',block:'start'});reader.focus({preventScroll:true});}
+function showReader(){if(document.body.classList.contains('immersive'))return;reader.scrollIntoView({behavior:reduced.matches?'instant':'smooth',block:'start'});reader.focus({preventScroll:true});}
 prev.addEventListener('click',()=>void go(current-1));next.addEventListener('click',()=>void go(current+1));
 el('start').addEventListener('click',showReader);
 chapterButtons.forEach(b=>b.addEventListener('click',()=>{showReader();void go(Number(b.dataset.page));}));
@@ -169,21 +166,75 @@ function endGesture(e: PointerEvent, cancelled=false){
 book.addEventListener('pointerup',e=>endGesture(e));book.addEventListener('pointercancel',e=>endGesture(e,true));book.addEventListener('lostpointercapture',e=>endGesture(e,true));
 book.addEventListener('dragstart',e=>e.preventDefault());
 
+// Fullscreen nativo quando disponível; fallback de viewport para iOS e ambientes restritos.
+type WebKitElement = HTMLElement & { webkitRequestFullscreen?: () => void | Promise<void> };
+type WebKitDocument = Document & { webkitFullscreenElement?: Element | null; webkitExitFullscreen?: () => void | Promise<void> };
+const fsDoc = document as WebKitDocument;
+const fsReader = reader as WebKitElement;
+const fullscreenElement = () => document.fullscreenElement || fsDoc.webkitFullscreenElement || null;
+let nativeSession = false;
+let fullscreenPending = false;
+let immersive = false;
+let savedScroll = 0;
+const outsideReader = document.querySelectorAll<HTMLElement>('.masthead,.intro,.footer,.skip');
 function setImmersive(active: boolean) {
+  if (active === immersive) return;
+  immersive = active;
+  if(active) savedScroll = window.scrollY;
   document.body.classList.toggle('immersive',active);
+  outsideReader.forEach(node => { node.inert = active; });
   focusButton.setAttribute('aria-pressed',String(active));
-  focusButton.setAttribute('aria-label',active?'Sair do modo imersivo':'Modo imersivo');
-  focusButton.title=active?'Sair do modo imersivo':'Modo imersivo';
-  if(active)focusButton.focus();
+  focusButton.setAttribute('aria-label',active?'Sair da tela cheia':'Tela cheia / modo imersivo');
+  focusButton.title=active?'Sair da tela cheia':'Tela cheia / modo imersivo';
+  document.getElementById('focus-icon')!.setAttribute('d',active?'M3 8h5V3m13 5h-5V3M8 21v-5H3m13 5v-5h5':'M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5');
+  if(!active) window.scrollTo({top:savedScroll,behavior:'instant'});
+  focusButton.focus({preventScroll:true});
+  requestAnimationFrame(fitBook);
 }
-focusButton.addEventListener('click',()=>setImmersive(!document.body.classList.contains('immersive')));
+async function toggleFullscreen() {
+  if(fullscreenPending)return;
+  fullscreenPending=true;
+  try {
+    if(immersive){
+      if(fullscreenElement()===reader){
+        try { if(document.exitFullscreen) await document.exitFullscreen(); else await fsDoc.webkitExitFullscreen?.(); }
+        catch { if(fullscreenElement()===reader)return; }
+      }
+      nativeSession=false;setImmersive(false);return;
+    }
+    // Aciona a API dentro do gesto do usuário. Se rejeitada, preserva o modo imersivo CSS.
+    setImmersive(true);
+    try {
+      if(reader.requestFullscreen && document.fullscreenEnabled) await reader.requestFullscreen();
+      else if(fsReader.webkitRequestFullscreen) await fsReader.webkitRequestFullscreen();
+      nativeSession=fullscreenElement()===reader;
+    } catch { nativeSession=false; }
+  } finally { fullscreenPending=false; }
+}
+function onFullscreenChange(){
+  if(fullscreenElement()===reader){nativeSession=true;setImmersive(true);}
+  else if(nativeSession){nativeSession=false;setImmersive(false);}
+}
+document.addEventListener('fullscreenchange',onFullscreenChange);
+document.addEventListener('webkitfullscreenchange',onFullscreenChange);
+focusButton.addEventListener('click',()=>void toggleFullscreen());
+// Dimensiona o quadrado pela área livre real após capítulos e controles, inclusive em rotação.
+const frame = reader.querySelector<HTMLElement>('.book-frame')!;
+function fitBook(){
+  if(!immersive)return;
+  const rect=frame.getBoundingClientRect();
+  frame.style.setProperty('--book-size',`${Math.max(1,Math.floor(Math.min(rect.width,rect.height)))}px`);
+}
+if('ResizeObserver' in window) new ResizeObserver(fitBook).observe(frame);
+window.addEventListener('resize',fitBook);
+window.visualViewport?.addEventListener('resize',fitBook);
 // Índice é criado sob demanda; miniaturas carregam conforme a área visível.
 function buildIndex(){
   const grid=el('thumbs');if(grid.childElementCount)return;
   const frag=document.createDocumentFragment();
   for(const p of PAGES){
     const button=document.createElement('button');button.type='button';button.className='thumb';button.dataset.number=String(p.number);button.setAttribute('aria-label',pageAlt(p.number));
-    const img=new Image();img.loading='lazy';img.decoding='async';img.src=asset(p.number,'small');img.alt='';img.width=800;img.height=800;
+    const img=new Image();img.loading='lazy';img.decoding='async';img.src=asset(p.number,'small');img.alt='';img.width=320;img.height=320;
     const number=document.createElement('span');number.textContent=pad(p.number);
     const title=document.createElement('small');title.textContent=p.title;
     button.append(img,number,title);button.addEventListener('click',()=>{indexDialog.close();void go(p.number);});frag.append(button);
@@ -203,7 +254,7 @@ for(const dialog of [indexDialog,zoomDialog,textDialog]){
 }
 window.addEventListener('keydown',e=>{
   if(document.querySelector('dialog[open]'))return;
-  if(e.key==='Escape'&&document.body.classList.contains('immersive')){setImmersive(false);return;}
+  if(e.key==='Escape'&&document.body.classList.contains('immersive')){e.preventDefault();void toggleFullscreen();return;}
   if(e.altKey||e.ctrlKey||e.metaKey||e.shiftKey||e.repeat||e.target instanceof HTMLInputElement||e.target instanceof HTMLTextAreaElement)return;
   const targets:Record<string,number>={ArrowLeft:current-1,ArrowRight:current+1,Home:1,End:TOTAL};
   if(e.key in targets){

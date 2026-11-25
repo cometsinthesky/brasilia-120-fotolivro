@@ -1,4 +1,4 @@
-# Brasília 120 — Fotolivro digital
+# Brasília 120 — Fotolivro digital (v2.0)
 
 Uma edição digital do projeto fotográfico autoral de Lucas Ferreira, Brasília, abril de 2022. Fotografia analógica noturna em médio formato, com 42 fotografias, cinco películas e três óticas: Monumental, Flâneur e Sociopolítica.
 
@@ -29,8 +29,8 @@ npm run preview  # Visualiza o build em http://localhost:4173
 - Passagem tridimensional de uma página por vez, com rotação em torno da lombada virtual e sombra dinâmica. Durante um swipe horizontal, a folha acompanha o gesto; abaixo do limiar de movimento, ela retorna à posição inicial.
 - Botões Anterior/Próxima; setas esquerda/direita; Home/End quando o leitor está focado; índice com 56 miniaturas; atalhos de capítulos; barra de progresso navegável.
 - Deslize para a esquerda para avançar, para a direita para retornar. Também funciona arrastando com o mouse. A rolagem vertical continua disponível.
-- Modo imersivo dentro da janela do navegador (Esc para sair), ampliação de páginas, texto extraído do PDF quando disponível e link para o PDF original.
-- Páginas WebP de 800 e 1600 px, `srcset`, pré-carregamento limitado a páginas vizinhas, miniaturas com lazy loading. Sem bibliotecas ou CDN em tempo de execução. Respeita `prefers-reduced-motion`.
+- Tela cheia nativa via Fullscreen API quando disponível; fallback imersivo CSS em navegadores que não permitem tela cheia (por exemplo, Safari no iPhone). Capítulos no topo e controles disponíveis durante toda a leitura; em paisagem de baixa altura, os controles ficam na lateral para maximizar o quadrado. Saia pelo botão ou Esc. Ampliação, texto e PDF original continuam acessíveis.
+- Páginas PNG de 2400 × 2400 px com codificação sem perdas, sem `srcset` de baixa resolução no leitor; miniaturas PNG de 320 px somente no índice. Pré-carregamento limitado às duas páginas vizinhas e miniaturas com lazy loading. Sem bibliotecas ou CDN em tempo de execução. Respeita `prefers-reduced-motion`.
 
 ## Estrutura
 
@@ -42,7 +42,7 @@ brasilia-120/
 │   ├── app.ts          # Navegação, gestos, animação e diálogos
 │   └── pages.ts        # Metadados e texto extraído das 56 páginas
 ├── public/
-│   ├── pages/          # 112 imagens WebP em duas resoluções
+│   ├── pages/          # 56 PNGs de leitura + 56 miniaturas PNG
 │   ├── brasilia-120.pdf # PDF original sem alterações
 │   └── favicon.svg
 ├── scripts/            # Build, servidor de desenvolvimento e conversão PDF
@@ -62,7 +62,7 @@ Nenhuma conta ou publicação foi criada pelo projeto. Certifique-se de possuir 
 
 ## Editar ou substituir o PDF
 
-Edite o texto em `src/index.html`, o visual em `src/styles.css` e a lógica em `src/app.ts`. O PDF enviado tem 56 páginas quadradas; a edição web preserva sua ordem e diagramação em imagens rasterizadas, com compressão WebP. Para regenerar os arquivos a partir do mesmo PDF:
+Edite o texto em `src/index.html`, o visual em `src/styles.css` e a lógica em `src/app.ts`. O PDF enviado tem 56 páginas quadradas; a edição web preserva sua ordem e diagramação em imagens rasterizadas, em PNG sem perdas, com 2400 × 2400 px por página. A resolução de renderização não acrescenta detalhes às fotografias rasterizadas originais (que já têm resolução limitada no PDF). Para regenerar os arquivos a partir do mesmo PDF:
 
 ```bash
 python -m pip install pymupdf pillow
@@ -72,6 +72,21 @@ npm run build
 
 Para um PDF diferente, revise também os títulos de seções, as páginas de capítulos, a capa inicial e os metadados em HTML e TypeScript. A transcrição é extraída automaticamente, podendo conservar a ordem de leitura interna do PDF em páginas com colunas.
 
+## Atualizar no GitHub Pages
+
+Use uma cópia local do repositório existente, mantendo a pasta `.git`. Substitua `src/`, `public/` e `scripts/` pelas versões novas; remova os antigos arquivos `.webp` em `public/pages/` e `dist/pages/`. Preserve alterações próprias nos arquivos de configuração ao mesclar o pacote.
+
+```bash
+npm install
+npm run build
+git add -A
+git commit -m "v2.0 - Fullscreen e PNG sem perdas"
+git push origin main
+npx gh-pages -d dist
+```
+
+Se necessário, instale `gh-pages` com `npm install -D gh-pages` antes de publicar. Em Settings → Pages, mantenha `gh-pages` e `/(root)` como origem.
+
 ## Verificação
 
-Compilação TypeScript em modo strict: concluída sem erros. Foram conferidos o layout em Chromium nas larguras de 320, 390, 768, 820, 1024, 1440 e 1920 px, os controles, saltos de capítulo, índice, ampliação, modo imersivo, arraste e toque emulado. O ambiente de teste bloqueou navegação direta do Chromium para localhost e file://; o teste de interface foi executado com os mesmos HTML, CSS e JavaScript, inserindo as imagens locais em memória. O servidor foi verificado por requisição HTTP. Não houve teste em aparelhos físicos ou Safari.
+TypeScript strict compilado sem erros. As 56 páginas foram rasterizadas diretamente do PDF de origem, e seis amostras foram comparadas pixel a pixel com o render original. Os controles, capítulo, navegação, arraste, índice, ampliação e dimensões do livro em modo imersivo foram conferidos no Chromium em 1440×900, 390×844, 320×568 e 844×390. O ambiente impede navegação HTTP/file no Chromium; os testes de interface foram realizados com os recursos do projeto inseridos em memória. O fallback sem Fullscreen API e o swipe por toque emulado foram conferidos em 390×844 e 844×390. Não foram testados dispositivos físicos ou Safari. A disponibilidade de fullscreen nativo depende do navegador; o fallback CSS não esconde necessariamente a barra de endereço do sistema.
