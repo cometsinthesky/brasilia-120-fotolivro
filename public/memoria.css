@@ -1,0 +1,41 @@
+/* Brasília 120 — Memória Fotográfica. Estilos isolados do reader. */
+.memoria { grid-column: 1 / -1; min-width: 0; width: 100%; border-top: 1px solid var(--line,#282725); padding-top: clamp(28px,5vw,64px); }
+.memoria-heading { display:flex; align-items:flex-end; justify-content:space-between; gap:16px; flex-wrap:wrap; }
+.memoria-heading .eyebrow { margin:0 0 10px; }
+.memoria-heading h2 { font:400 clamp(36px,6vw,76px)/1.04 var(--serif,Georgia,serif); letter-spacing:-.05em; margin:0; }
+.memoria-heading h2 span { color:var(--accent,#c9b89c); }
+.memoria-subtitle { color:var(--accent,#c9b89c); font:italic clamp(17px,2vw,22px)/1.4 var(--serif,Georgia,serif); margin:12px 0 0; }
+.memoria-edition { font:11px var(--mono,monospace); color:var(--muted,#aaa); letter-spacing:.12em; }
+.memoria-description { max-width:850px; border-left:1px solid #746858; padding:1px 0 1px 17px; margin:25px 0; color:#c0bdb8; line-height:1.8; }
+.memoria-description p { margin:0 0 10px; }.memoria-description p:last-child { margin:0; }
+.memoria-stats { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); margin:28px 0 36px; border-block:1px solid var(--line,#282725); padding:16px 0; gap:12px; }
+.memoria-stats div { padding-left:14px; border-left:1px solid var(--line,#282725); min-width:0; }.memoria-stats div:first-child { padding-left:0;border:0; }
+.memoria-stats dt { color:var(--muted,#aaa); font:10px/1.4 var(--mono,monospace); letter-spacing:.06em; }.memoria-stats dd { font:clamp(24px,3vw,38px)/1.2 var(--serif,Georgia,serif); margin:5px 0 0; }
+.memoria-grid-head { display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px; align-items:center; margin-bottom:12px; color:var(--muted,#aaa); font-size:11px; }
+.memoria-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(min(100%,125px),1fr)); gap:10px; }
+.memoria-grid .memoria-thumb { min-width:0; width:100%; display:block; text-align:left; padding:4px; border:1px solid var(--line,#282725); background:#080808; transition:border-color .2s,background .2s; }
+.memoria-thumb:hover,.memoria-thumb:focus-visible { border-color:var(--accent,#c9b89c);background:#171613; }
+.memoria-thumb .memoria-thumb-frame { display:grid; place-items:center; aspect-ratio:1/1; width:100%; overflow:hidden; background:#101010; }
+.memoria-thumb img { display:block;width:100%;height:100%;aspect-ratio:1/1;object-fit:contain;transition:transform .25s ease; }
+.memoria-thumb:hover img { transform:scale(1.025); }
+.memoria-thumb .memoria-thumb-number { display:block; margin:5px 3px 2px; font:11px var(--mono,monospace); color:var(--accent,#c9b89c); }
+.memoria-credit { font-size:11px; color:var(--muted,#aaa); margin:15px 0 0; }
+/* Dialog nativo: usa toda a janela sem depender da Fullscreen API. */
+.memoria-dialog { box-sizing:border-box; position:fixed; inset:0; margin:auto; width:100%; max-width:none; height:100vh; height:100dvh; max-height:none; border:0; background:#000; color:var(--fg,#f3f1ed); padding:max(12px,env(safe-area-inset-top)) max(12px,env(safe-area-inset-right)) max(10px,env(safe-area-inset-bottom)) max(12px,env(safe-area-inset-left)); overflow:hidden; }
+.memoria-dialog[open] { display:grid; grid-template-rows:auto minmax(0,1fr) auto auto; gap:10px; }
+.memoria-dialog::backdrop { background:#000; backdrop-filter:none; }
+body.memoria-open { overflow:hidden; overscroll-behavior:none; }
+.memoria-view-head { display:flex; justify-content:space-between; align-items:center; gap:8px; width:min(100%,1300px); margin:0 auto; }
+.memoria-view-head h2 { font:400 clamp(18px,3vw,28px)/1.15 var(--serif,Georgia,serif); margin:3px 0 0; }
+.memoria-stage { position:relative; width:100%; height:100%; min-height:0; min-width:0; overflow:hidden; isolation:isolate; perspective:1500px; background:#000; touch-action:none; user-select:none; cursor:grab; }
+.memoria-stage.is-dragging { cursor:grabbing; }
+.memoria-image,.memoria-turn img { display:block; width:100%; height:100%; object-fit:contain; pointer-events:none; user-select:none; }
+.memoria-turn { position:absolute; inset:0; background:#000; z-index:2; transform-style:preserve-3d; backface-visibility:hidden; will-change:transform,opacity; pointer-events:none; }
+.memoria-shade { position:absolute;inset:0;background:linear-gradient(90deg,transparent 25%,#0009);opacity:0; }
+.memoria-status { position:absolute; z-index:3; bottom:14px; left:50%; transform:translateX(-50%); background:#101010ee; border:1px solid #49443d; padding:9px 14px; max-width:90%; text-align:center; color:#eee; }
+.memoria-controls { display:flex; align-items:center; justify-content:space-between; gap:10px; width:min(100%,850px); margin:auto; }
+#memoria-current { color:var(--fg,#eee); font-size:19px; }
+.memoria-view-foot { display:flex; justify-content:space-between; flex-wrap:wrap; gap:5px; width:min(100%,850px); margin:auto; font-size:10px; color:var(--muted,#aaa); }
+@media(max-width:600px) { .memoria-stats { grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px 10px; }.memoria-stats div:nth-child(3){padding-left:0;border:0;} .memoria-grid {grid-template-columns:repeat(auto-fill,minmax(min(100%,88px),1fr));gap:6px;} .memoria-description {font-size:13px;} .memoria-view-head .small-label{font-size:9px;} .memoria-controls .nav-btn {padding:7px 10px;gap:6px;} .memoria-view-foot {justify-content:center;text-align:center;} }
+@media(max-height:460px) and (orientation:landscape) { .memoria-dialog[open] { grid-template-columns:minmax(0,1fr) minmax(140px,24vw);grid-template-rows:auto minmax(0,1fr) auto;gap:6px 12px; } .memoria-view-head{grid-column:1/-1;} .memoria-stage{grid-column:1;grid-row:2/4;} .memoria-controls{grid-column:2;grid-row:2;align-self:center;flex-wrap:wrap;justify-content:center;} .memoria-controls .nav-btn span:not([aria-hidden]){display:none;} .memoria-view-foot{grid-column:2;grid-row:3;text-align:center;justify-content:center;} }
+@media(prefers-reduced-motion:reduce) { .memoria-thumb img,.memoria-thumb {transition:none;} }

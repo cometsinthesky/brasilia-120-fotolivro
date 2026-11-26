@@ -1,0 +1,43 @@
+<!-- INICIO MEMORIA FOTOGRAFICA -->
+<section class="memoria" id="memoria-fotografica" aria-labelledby="memoria-title">
+  <header class="memoria-heading">
+    <div>
+      <p class="eyebrow"><span class="dot"></span> PESQUISA DE CAMPO / ACERVO HISTÓRICO</p>
+      <h2 id="memoria-title">Memória Fotográfica<span>.</span></h2>
+      <p class="memoria-subtitle">Brasília através de outros tempos e olhares.</p>
+    </div>
+    <span class="memoria-edition">MARÇO 2022 / DF</span>
+  </header>
+  <div class="memoria-description">
+    <p>Em março de 2022, como parte do projeto Brasília 120, realizei uma pesquisa de campo no acervo do Arquivo Público do Distrito Federal. Ao longo de mais de 30 horas de investigação, percorri mais de 30 mil arquivos digitalizados e selecionei mais de 120 fotografias noturnas de Brasília.</p>
+    <p>Este mural reúne 42 fotografias analógicas desse levantamento, convidando à contemplação da memória visual da capital federal e ao diálogo entre suas paisagens noturnas do passado e os registros contemporâneos do fotolivro.</p>
+  </div>
+  <dl class="memoria-stats">
+    <div><dt>TEMPO DE PESQUISA</dt><dd>30+ h</dd></div>
+    <div><dt>ARQUIVOS CONSULTADOS</dt><dd>30.000+</dd></div>
+    <div><dt>FOTOS SELECIONADAS</dt><dd>120+</dd></div>
+    <div><dt>NESTE MURAL</dt><dd>42</dd></div>
+  </dl>
+  <div class="memoria-grid-head"><span class="small-label">ACERVO / 01–42</span><span>Selecione uma fotografia para ampliar ↗</span></div>
+  <div id="memoria-grid" class="memoria-grid" aria-label="Mural de fotografias históricas"></div>
+  <p class="memoria-credit">Fonte das imagens: Arquivo Público do Distrito Federal. Pesquisa e seleção: Lucas Ferreira, março de 2022.</p>
+  <noscript><p>Habilite o JavaScript para explorar o mural.</p></noscript>
+  <dialog id="memoria-dialog" class="memoria-dialog" aria-labelledby="memoria-dialog-title">
+    <div class="memoria-view-head">
+      <div><span class="small-label">ARQUIVO PÚBLICO DO DISTRITO FEDERAL</span><h2 id="memoria-dialog-title">Memória Fotográfica</h2></div>
+      <button type="button" id="memoria-close" class="icon-btn close" aria-label="Fechar visualizador" title="Fechar (Esc)">×</button>
+    </div>
+    <div id="memoria-stage" class="memoria-stage" aria-label="Fotografia ampliada; deslize horizontalmente para navegar">
+      <img id="memoria-image" class="memoria-image" alt="" draggable="false">
+      <div id="memoria-turn" class="memoria-turn" hidden aria-hidden="true"><img id="memoria-turn-image" alt="" draggable="false"><div id="memoria-shade" class="memoria-shade"></div></div>
+      <div id="memoria-status" class="memoria-status" role="status" hidden></div>
+    </div>
+    <div class="memoria-controls">
+      <button type="button" id="memoria-prev" class="nav-btn" aria-label="Fotografia anterior"><span aria-hidden="true">←</span><span>Anterior</span></button>
+      <div class="page-counter" aria-live="polite" aria-atomic="true"><span id="memoria-current">01</span><span class="slash">/</span><span>42</span></div>
+      <button type="button" id="memoria-next" class="nav-btn" aria-label="Próxima fotografia"><span>Próxima</span><span aria-hidden="true">→</span></button>
+    </div>
+    <div class="memoria-view-foot"><span>↔ Deslize, arraste ou use as setas</span><span>Acervo: Arquivo Público do Distrito Federal</span></div>
+  </dialog>
+</section>
+<!-- FIM MEMORIA FOTOGRAFICA -->
